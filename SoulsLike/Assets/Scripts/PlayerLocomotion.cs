@@ -38,7 +38,6 @@ namespace OGS
 
             inputHandler.TickInput(delta);
 
-
             HandleMovement();
             animatorHandler.UpdateAnimatorValues(inputHandler.MoveAmount, 0);
             if (animatorHandler.canRotate)
@@ -56,6 +55,7 @@ namespace OGS
             moveDirection = cameraObject.forward * inputHandler.Vertical;
             moveDirection += cameraObject.right * inputHandler.Horizontal;
             moveDirection.Normalize();
+            moveDirection.y = 0;
 
             float speed = movementSpeed;
             moveDirection *= speed;
@@ -66,7 +66,7 @@ namespace OGS
 
         private void HandleRotation(float delta)
         {
-            Vector3 targetDir = Vector3.zero;
+            Vector3 targetDir;
             float moveOverride = inputHandler.MoveAmount;
 
             targetDir = cameraObject.forward * inputHandler.Vertical;

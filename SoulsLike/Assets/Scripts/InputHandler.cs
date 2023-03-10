@@ -16,9 +16,23 @@ namespace OGS
         public float MouseY { get; private set; }
 
         PlayerControls inputActions;
+        CameraHandler cameraHandler;
 
         Vector2 movementInput;
         Vector2 cameraInput;
+
+        private void Awake()
+        {
+            cameraHandler = CameraHandler.Instance;
+        }
+
+        private void FixedUpdate()
+        {
+            float delta = Time.fixedDeltaTime;
+
+            cameraHandler?.FollowTarget(delta);
+            cameraHandler?.HandleCameraRotation(delta, MouseX, MouseY);
+        }
 
         public void OnEnable()
         {
@@ -40,6 +54,7 @@ namespace OGS
         public void TickInput(float delta)
         {
             MoveInput(delta);
+            CameraInput(delta);
         }
 
         private void MoveInput(float delta)
@@ -47,6 +62,10 @@ namespace OGS
             Horizontal = movementInput.x;
             Vertical = movementInput.y;
             MoveAmount = Mathf.Clamp01(Mathf.Abs(Horizontal) + Mathf.Abs(Vertical));
+        }
+
+        private void CameraInput(float delta)
+        {
             MouseX = cameraInput.x;
             MouseY = cameraInput.y;
         }
