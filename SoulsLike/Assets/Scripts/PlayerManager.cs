@@ -54,8 +54,7 @@ namespace OGS
 
         private void LateUpdate()
         {
-            inputHandler.SprintFlag = false;
-            IsSprinting = inputHandler.RollInput;
+            IsSprinting = inputHandler.SprintFlag;
         }
     }
 }

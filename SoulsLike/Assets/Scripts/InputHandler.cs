@@ -43,18 +43,15 @@ namespace OGS
                 inputActions.PlayerMovement.Camera.performed += ctx => cameraInput = ctx.ReadValue<Vector2>();
                 inputActions.PlayerMovement.Sprint.performed += ctx =>
                 {
-                    Debug.Log("Sprint!");
                     SprintFlag = true;
                 };
                 inputActions.PlayerMovement.Sprint.canceled += ctx =>
                 {
-                    Debug.Log("End Sprint");
                     SprintFlag = false;
                 };
 
                 inputActions.PlayerActions.Roll.performed += ctx =>
                 {
-                    Debug.Log("Roll!");
                     playerManager.RollEvent.Invoke();
                 };
 
