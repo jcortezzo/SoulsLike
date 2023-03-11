@@ -20,7 +20,7 @@ namespace OGS
             horizontalAnimationParamIndex = Animator.StringToHash("Horizontal");
         }
 
-        public void UpdateAnimatorValues(float verticalMovement, float horizontalMovement)
+        public void UpdateAnimatorValues(float verticalMovement, float horizontalMovement, bool isSprinting)
         {
             #region Vertical
             float v = 0;
@@ -69,6 +69,12 @@ namespace OGS
                 h = 0;
             }
             #endregion
+
+            if (isSprinting && v != 0)
+            {
+                v = 2;
+                h = horizontalMovement;
+            }
 
             anim.SetFloat(verticalAnimationParamIndex, v, 0.1f, Time.deltaTime);
             anim.SetFloat(horizontalAnimationParamIndex, h, 0.1f, Time.deltaTime);

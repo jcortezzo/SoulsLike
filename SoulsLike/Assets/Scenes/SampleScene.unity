@@ -856,10 +856,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   myTransform: {fileID: 0}
   animatorHandler: {fileID: 0}
-  rigidbody: {fileID: 0}
   normalCamera: {fileID: 0}
   movementSpeed: 5
+  sprintSpeed: 7
   rotationSpeed: 10
+  isSprinting: 0
 --- !u!114 &1965759518
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -879,6 +880,8 @@ MonoBehaviour:
   <MouseY>k__BackingField: 0
   <RollInput>k__BackingField: 0
   <RollFlag>k__BackingField: 0
+  <SprintFlag>k__BackingField: 0
+  rollInputTimer: 0
   <IsInteracting>k__BackingField: 0
 --- !u!54 &1965759519
 Rigidbody:

@@ -18,9 +18,13 @@ namespace OGS
 
         [Header("Stats")]
         [SerializeField]
-        float movementSpeed = 5;
+        private float movementSpeed = 5;
         [SerializeField]
-        float rotationSpeed = 10;
+        private float sprintSpeed = 7;
+        [SerializeField]
+        private float rotationSpeed = 10;
+
+        public bool isSprinting;
 
         void Start()
         {
@@ -36,6 +40,7 @@ namespace OGS
         {
             float delta = Time.deltaTime;
 
+            isSprinting = inputHandler.RollInput;
             inputHandler.TickInput(delta);
             HandleMovement(delta);
             HandleRollAndSprint(delta);
@@ -47,8 +52,12 @@ namespace OGS
 
         private void HandleMovement(float delta)
         {
+            if (inputHandler.RollFlag)
+            {
+                return;
+            }
             HandleWalking();
-            animatorHandler.UpdateAnimatorValues(inputHandler.MoveAmount, 0);
+            animatorHandler.UpdateAnimatorValues(inputHandler.MoveAmount, 0, isSprinting);
             if (animatorHandler.canRotate)
             {
                 HandleRotation(delta);
@@ -63,6 +72,13 @@ namespace OGS
             moveDirection.y = 0;
 
             float speed = movementSpeed;
+
+            if (inputHandler.SprintFlag)
+            {
+                Debug.Log("SprintFlag!");
+                speed = sprintSpeed;
+                isSprinting = true;
+            }
             moveDirection *= speed;
 
             Vector3 projectedVelocity = Vector3.ProjectOnPlane(moveDirection, normalVector);
@@ -101,7 +117,6 @@ namespace OGS
 
             if (inputHandler.RollFlag)
             {
-                Debug.Log("Player Roll!");
                 moveDirection = cameraObject.forward * inputHandler.Vertical;
                 moveDirection += cameraObject.right * inputHandler.Horizontal;
 

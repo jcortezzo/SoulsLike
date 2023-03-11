@@ -19,6 +19,7 @@ namespace OGS
         {
             inputHandler.IsInteracting = anim.GetBool("IsInteracting");
             inputHandler.RollFlag = false;
+            inputHandler.SprintFlag = false;
         }
     }
 }

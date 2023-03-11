@@ -19,6 +19,9 @@ namespace OGS
         [field: SerializeField]
         public bool RollFlag { get; set; }
         [field: SerializeField]
+        public bool SprintFlag { get; set; }
+        public float rollInputTimer;
+        [field: SerializeField]
         public bool IsInteracting { get; set; }
 
         PlayerControls inputActions;
@@ -84,8 +87,18 @@ namespace OGS
             //Debug.Log($"UnityEngine: {UnityEngine.InputSystem.InputActionPhase.Started}");
             if (RollInput)
             {
-                Debug.Log("Pressed roll!");
-                RollFlag = true;
+                //Debug.Log("Pressed roll!");
+                rollInputTimer += delta;
+                SprintFlag = true;
+            }
+            else
+            {
+                if (rollInputTimer > 0 && rollInputTimer < 0.5f)
+                {
+                    SprintFlag = false;
+                    RollFlag = true;
+                }
+                rollInputTimer = 0;
             }
         }
     }
