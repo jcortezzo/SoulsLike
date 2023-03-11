@@ -21,27 +21,16 @@ namespace OGS
         [field: SerializeField]
         public bool SprintFlag { get; set; }
         public float rollInputTimer;
-        [field: SerializeField]
-        public bool IsInteracting { get; set; }
+
 
         PlayerControls inputActions;
-        CameraHandler cameraHandler;
 
         Vector2 movementInput;
         Vector2 cameraInput;
 
-        private void Awake()
-        {
-            cameraHandler = CameraHandler.Instance;
-        }
 
-        private void FixedUpdate()
-        {
-            float delta = Time.fixedDeltaTime;
 
-            cameraHandler?.FollowTarget(delta);
-            cameraHandler?.HandleCameraRotation(delta, MouseX, MouseY);
-        }
+
 
         public void OnEnable()
         {

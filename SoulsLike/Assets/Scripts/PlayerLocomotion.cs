@@ -16,7 +16,9 @@ namespace OGS
         public Rigidbody Rigidbody { get; private set; }
         public GameObject normalCamera;
 
-        [Header("Stats")]
+        private PlayerManager playerManager;
+
+        [Header("Movement Stats")]
         [SerializeField]
         private float movementSpeed = 5;
         [SerializeField]
@@ -24,10 +26,9 @@ namespace OGS
         [SerializeField]
         private float rotationSpeed = 10;
 
-        public bool isSprinting;
-
         void Start()
         {
+            playerManager = GetComponent<PlayerManager>();
             Rigidbody = GetComponent<Rigidbody>();
             inputHandler = GetComponent<InputHandler>();
             animatorHandler = GetComponentInChildren<AnimatorHandler>();
@@ -36,28 +37,18 @@ namespace OGS
             animatorHandler.Initialize();
         }
 
-        public void Update()
-        {
-            float delta = Time.deltaTime;
-
-            isSprinting = inputHandler.RollInput;
-            inputHandler.TickInput(delta);
-            HandleMovement(delta);
-            HandleRollAndSprint(delta);
-        }
-
         #region Movement
         Vector3 normalVector;
         Vector3 targetPosition;
 
-        private void HandleMovement(float delta)
+        public void HandleMovement(float delta)
         {
             if (inputHandler.RollFlag)
             {
                 return;
             }
             HandleWalking();
-            animatorHandler.UpdateAnimatorValues(inputHandler.MoveAmount, 0, isSprinting);
+            animatorHandler.UpdateAnimatorValues(inputHandler.MoveAmount, 0, playerManager.IsSprinting);
             if (animatorHandler.canRotate)
             {
                 HandleRotation(delta);
@@ -75,9 +66,8 @@ namespace OGS
 
             if (inputHandler.SprintFlag)
             {
-                Debug.Log("SprintFlag!");
                 speed = sprintSpeed;
-                isSprinting = true;
+                playerManager.IsSprinting = true;
             }
             moveDirection *= speed;
 
