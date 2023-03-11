@@ -60,10 +60,6 @@ namespace OGS
 
         public void HandleMovement(float delta)
         {
-            //if (inputHandler.RollFlag)
-            //{
-            //    return;
-            //}
             if (playerManager.IsInteracting)
             {
                 return;
