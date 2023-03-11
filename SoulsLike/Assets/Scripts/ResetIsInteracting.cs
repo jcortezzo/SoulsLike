@@ -1,10 +1,18 @@
 using UnityEngine;
 
-public class ResetIsInteracting : StateMachineBehaviour
+namespace OGS
 {
-    // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
-    override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    public class ResetIsInteracting : StateMachineBehaviour
     {
-        animator.SetBool("IsInteracting", false);
+        // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
+        override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+        {
+            animator.SetBool("IsInteracting", false);
+            PlayerManager playerManager = animator.gameObject.GetComponentInParent<PlayerManager>();
+            if (playerManager != null)
+            {
+                playerManager.PlayerState = PlayerState.IDLE;
+            }
+        }
     }
 }

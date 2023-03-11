@@ -62,12 +62,17 @@ namespace OGS
             moveDirection.Normalize();
             moveDirection.y = 0;
 
-            float speed = movementSpeed;
+            float speed;
 
             if (inputHandler.SprintFlag)
             {
                 speed = sprintSpeed;
-                playerManager.IsSprinting = true;
+                playerManager.PlayerState = PlayerState.SPRINTING;
+            }
+            else
+            {
+                speed = movementSpeed;
+                playerManager.PlayerState = PlayerState.WALKING;
             }
             moveDirection *= speed;
 
@@ -104,6 +109,8 @@ namespace OGS
             {
                 return;
             }
+
+            playerManager.PlayerState = PlayerState.ROLLING;
 
             moveDirection = cameraObject.forward * inputHandler.Vertical;
             moveDirection += cameraObject.right * inputHandler.Horizontal;
