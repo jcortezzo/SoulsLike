@@ -6,7 +6,7 @@ namespace OGS
     {
         Transform cameraObject;
         InputHandler inputHandler;
-        Vector3 moveDirection;
+        private Vector3 moveDirection;
 
         [HideInInspector]
         public Transform myTransform;
@@ -18,6 +18,16 @@ namespace OGS
 
         private PlayerManager playerManager;
 
+        [Header("Ground & Air Detection Stats")]
+        [SerializeField]
+        private float groundDetectionRayStartPoint = 0.5f;
+        [SerializeField]
+        private float minDistanceNeededToBeginFall = 1f;
+        [SerializeField]
+        private float groundDirectionRayDistance = 0.2f;
+        private LayerMask ignoreForGroundCheck;
+        public float airborneTimer;
+
         [Header("Movement Stats")]
         [SerializeField]
         private float movementSpeed = 5;
@@ -25,6 +35,8 @@ namespace OGS
         private float sprintSpeed = 7;
         [SerializeField]
         private float rotationSpeed = 10;
+        [SerializeField]
+        private float fallingSpeed = 45;
 
         void Start()
         {
@@ -35,6 +47,9 @@ namespace OGS
             cameraObject = Camera.main.transform;
             myTransform = transform;
             animatorHandler.Initialize();
+
+            playerManager.IsGrounded = true;
+            ignoreForGroundCheck = ~(1 << 8 | 1 << 11);
         }
 
         #region Movement
@@ -43,7 +58,11 @@ namespace OGS
 
         public void HandleMovement(float delta)
         {
-            if (inputHandler.RollFlag)
+            //if (inputHandler.RollFlag)
+            //{
+            //    return;
+            //}
+            if (playerManager.IsInteracting)
             {
                 return;
             }
@@ -96,6 +115,88 @@ namespace OGS
             Quaternion targetRotation = Quaternion.Slerp(myTransform.rotation, tr, rs * delta);
 
             myTransform.rotation = targetRotation;
+        }
+
+        public void HandleFalling(float delta)
+        {
+            Vector3 moveDirection = this.moveDirection;
+            playerManager.IsGrounded = false;
+            RaycastHit hit;
+            Vector3 origin = myTransform.position;
+            origin.y += groundDetectionRayStartPoint;
+
+            if (Physics.Raycast(origin, myTransform.forward, out hit, 0.4f))
+            {
+                moveDirection = Vector3.zero;
+            }
+            if (playerManager.IsAirborne)
+            {
+                Rigidbody.AddForce(-Vector3.up * fallingSpeed * delta);
+                Rigidbody.AddForce(moveDirection * fallingSpeed / 20f * delta);
+            }
+
+            Vector3 dir = moveDirection;
+            dir.Normalize();
+            origin += dir * groundDirectionRayDistance;
+
+            this.targetPosition = myTransform.position;
+
+            Debug.DrawRay(origin, -Vector3.up * minDistanceNeededToBeginFall, Color.red, 0.1f, false);
+
+            if (Physics.Raycast(origin, -Vector3.up, out hit, minDistanceNeededToBeginFall, ignoreForGroundCheck))
+            {
+                normalVector = hit.normal;
+                Vector3 targetPosition = hit.point;
+                playerManager.IsGrounded = true;
+                this.targetPosition.y = targetPosition.y;
+
+                if (playerManager.IsAirborne)
+                {
+                    if (airborneTimer > 0.5f)
+                    {
+                        Debug.Log($"Player airborne for {airborneTimer}");
+                        animatorHandler.PlayTargetAnimation("Land", true);
+                    }
+                    else
+                    {
+                        animatorHandler.PlayTargetAnimation("Locomotion", false);
+                    }
+                    airborneTimer = 0;
+
+                    playerManager.IsAirborne = false;
+                }
+            }
+            else
+            {
+                if (playerManager.IsGrounded)
+                {
+                    playerManager.IsGrounded = false;
+                }
+                if (!playerManager.IsAirborne)
+                {
+                    if (!playerManager.IsInteracting)
+                    {
+                        animatorHandler.PlayTargetAnimation("Fall", true);
+                    }
+
+                    Vector3 vel = Rigidbody.velocity;
+                    vel.Normalize();
+                    Rigidbody.velocity = vel * (movementSpeed / 2);
+                    playerManager.IsAirborne = true;
+                }
+            }
+
+            if (playerManager.IsGrounded)
+            {
+                if (playerManager.IsInteracting || inputHandler.MoveAmount > 0)
+                {
+                    myTransform.position = Vector3.Lerp(myTransform.position, targetPosition, Time.deltaTime);
+                }
+                else
+                {
+                    myTransform.position = targetPosition;
+                }
+            }
         }
 
         public void Roll()
