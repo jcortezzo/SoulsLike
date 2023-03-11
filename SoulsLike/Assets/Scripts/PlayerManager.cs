@@ -11,12 +11,9 @@ namespace OGS
         PlayerLocomotion playerLocomotion;
 
         [field: SerializeField]
-        public PlayerState PlayerState { get; set; }
-
+        public bool IsInteracting { get; set; }
         [field: SerializeField]
-        public bool IsInteracting { get; private set; }
-        public bool IsSprinting { get { return PlayerState == PlayerState.SPRINTING; } }
-        public bool IsRolling { get { return PlayerState == PlayerState.ROLLING; } }
+        public bool IsSprinting { get; set; }
 
         public UnityEvent RollEvent { get; private set; }
 
@@ -57,7 +54,8 @@ namespace OGS
 
         private void LateUpdate()
         {
-            //IsSprinting = inputHandler.SprintFlag;
+            inputHandler.SprintFlag = false;
+            IsSprinting = inputHandler.RollInput;
         }
     }
 }
