@@ -101,7 +101,7 @@ namespace OGS
 
         public void EndInteraction()
         {
-            playerManager.IsInteracting = false;
+            anim.SetBool("IsInteracting", false);
         }
 
         private void OnAnimatorMove()

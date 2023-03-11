@@ -960,6 +960,7 @@ MonoBehaviour:
   sprintSpeed: 7
   rotationSpeed: 10
   fallingSpeed: 45
+  maxFallingSpeed: 1000
 --- !u!114 &1965759518
 MonoBehaviour:
   m_ObjectHideFlags: 0

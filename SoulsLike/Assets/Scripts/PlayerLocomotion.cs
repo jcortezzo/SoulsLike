@@ -37,6 +37,8 @@ namespace OGS
         private float rotationSpeed = 10;
         [SerializeField]
         private float fallingSpeed = 45;
+        [SerializeField]
+        private float maxFallingSpeed = 45;
 
         void Start()
         {
@@ -129,10 +131,15 @@ namespace OGS
             {
                 moveDirection = Vector3.zero;
             }
-            if (playerManager.IsAirborne)
+            if (playerManager.IsAirborne && Mathf.Abs(Rigidbody.velocity.y) < maxFallingSpeed)
             {
                 Rigidbody.AddForce(-Vector3.up * fallingSpeed * delta);
-                Rigidbody.AddForce(moveDirection * fallingSpeed / 20f * delta);
+                Rigidbody.AddForce(moveDirection * fallingSpeed / 40f * delta);
+
+                if (Mathf.Abs(Rigidbody.velocity.y) > maxFallingSpeed)
+                {
+                    Rigidbody.velocity = new Vector3(Rigidbody.velocity.x, maxFallingSpeed, Rigidbody.velocity.z);
+                }
             }
 
             Vector3 dir = moveDirection;
@@ -143,6 +150,7 @@ namespace OGS
 
             Debug.DrawRay(origin, -Vector3.up * minDistanceNeededToBeginFall, Color.red, 0.1f, false);
 
+            // Land
             if (Physics.Raycast(origin, -Vector3.up, out hit, minDistanceNeededToBeginFall, ignoreForGroundCheck))
             {
                 normalVector = hit.normal;
@@ -168,10 +176,7 @@ namespace OGS
             }
             else
             {
-                if (playerManager.IsGrounded)
-                {
-                    playerManager.IsGrounded = false;
-                }
+                playerManager.IsGrounded = false;
                 if (!playerManager.IsAirborne)
                 {
                     if (!playerManager.IsInteracting)
