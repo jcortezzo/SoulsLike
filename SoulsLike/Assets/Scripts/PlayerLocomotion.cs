@@ -98,29 +98,26 @@ namespace OGS
             myTransform.rotation = targetRotation;
         }
 
-        public void HandleRollAndSprint(float delta)
+        public void Roll()
         {
             if (animatorHandler.anim.GetBool("IsInteracting"))
             {
                 return;
             }
 
-            if (inputHandler.RollFlag)
-            {
-                moveDirection = cameraObject.forward * inputHandler.Vertical;
-                moveDirection += cameraObject.right * inputHandler.Horizontal;
+            moveDirection = cameraObject.forward * inputHandler.Vertical;
+            moveDirection += cameraObject.right * inputHandler.Horizontal;
 
-                if (inputHandler.MoveAmount > 0)
-                {
-                    animatorHandler.PlayTargetAnimation("Roll", true);
-                    moveDirection.y = 0;
-                    Quaternion rollRotation = Quaternion.LookRotation(moveDirection);
-                    myTransform.rotation = rollRotation;
-                }
-                else
-                {
-                    animatorHandler.PlayTargetAnimation("Backstep", true);
-                }
+            if (inputHandler.MoveAmount > 0)
+            {
+                animatorHandler.PlayTargetAnimation("Roll", true);
+                moveDirection.y = 0;
+                Quaternion rollRotation = Quaternion.LookRotation(moveDirection);
+                myTransform.rotation = rollRotation;
+            }
+            else
+            {
+                animatorHandler.PlayTargetAnimation("Backstep", true);
             }
         }
         #endregion

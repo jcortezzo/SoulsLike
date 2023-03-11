@@ -22,23 +22,39 @@ namespace OGS
         public bool SprintFlag { get; set; }
         public float rollInputTimer;
 
-
         PlayerControls inputActions;
 
         Vector2 movementInput;
         Vector2 cameraInput;
 
+        PlayerManager playerManager;
 
-
-
+        private void Awake()
+        {
+            playerManager = GetComponent<PlayerManager>();
+        }
 
         public void OnEnable()
         {
             if (inputActions == null)
             {
                 inputActions = new PlayerControls();
-                inputActions.PlayerMovement.Movement.performed += action => movementInput = action.ReadValue<Vector2>();
-                inputActions.PlayerMovement.Camera.performed += action => cameraInput = action.ReadValue<Vector2>();
+                inputActions.PlayerMovement.Movement.performed += ctx => movementInput = ctx.ReadValue<Vector2>();
+                inputActions.PlayerMovement.Camera.performed += ctx => cameraInput = ctx.ReadValue<Vector2>();
+                inputActions.PlayerMovement.Sprint.performed += ctx =>
+                {
+                    SprintFlag = true;
+                };
+                inputActions.PlayerMovement.Sprint.canceled += ctx =>
+                {
+                    SprintFlag = false;
+                };
+
+                inputActions.PlayerActions.Roll.performed += ctx =>
+                {
+                    playerManager.RollEvent.Invoke();
+                };
+
             }
 
             inputActions.Enable();
@@ -53,7 +69,6 @@ namespace OGS
         {
             MoveInput(delta);
             CameraInput(delta);
-            HandleRollInput(delta);
         }
 
         private void MoveInput(float delta)
@@ -67,28 +82,6 @@ namespace OGS
         {
             MouseX = cameraInput.x;
             MouseY = cameraInput.y;
-        }
-
-        private void HandleRollInput(float delta)
-        {
-            RollInput = inputActions.PlayerActions.Roll.phase == UnityEngine.InputSystem.InputActionPhase.Performed;
-            //Debug.Log($"inputAction: {inputActions.PlayerActions.Roll.phase}");
-            //Debug.Log($"UnityEngine: {UnityEngine.InputSystem.InputActionPhase.Started}");
-            if (RollInput)
-            {
-                //Debug.Log("Pressed roll!");
-                rollInputTimer += delta;
-                SprintFlag = true;
-            }
-            else
-            {
-                if (rollInputTimer > 0 && rollInputTimer < 0.5f)
-                {
-                    SprintFlag = false;
-                    RollFlag = true;
-                }
-                rollInputTimer = 0;
-            }
         }
     }
 }
