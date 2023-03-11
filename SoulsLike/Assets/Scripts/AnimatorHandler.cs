@@ -5,6 +5,8 @@ namespace OGS
     public class AnimatorHandler : MonoBehaviour
     {
         public Animator anim;
+        public InputHandler inputHandler;
+        public PlayerLocomotion playerLocomotion;
         int verticalAnimationParamIndex;
         int horizontalAnimationParamIndex;
         public bool canRotate;
@@ -12,6 +14,8 @@ namespace OGS
         public void Initialize()
         {
             anim = GetComponent<Animator>();
+            inputHandler = GetComponentInParent<InputHandler>();
+            playerLocomotion = GetComponentInParent<PlayerLocomotion>();
             verticalAnimationParamIndex = Animator.StringToHash("Vertical");
             horizontalAnimationParamIndex = Animator.StringToHash("Horizontal");
         }
@@ -70,6 +74,13 @@ namespace OGS
             anim.SetFloat(horizontalAnimationParamIndex, h, 0.1f, Time.deltaTime);
         }
 
+        public void PlayTargetAnimation(string targetAnim, bool isInteracting)
+        {
+            anim.applyRootMotion = isInteracting;
+            anim.SetBool("IsInteracting", isInteracting);
+            anim.CrossFade(targetAnim, 0.2f);
+        }
+
         public void CanRotate()
         {
             canRotate = true;
@@ -78,6 +89,20 @@ namespace OGS
         public void StopRotation()
         {
             canRotate = false;
+        }
+
+        private void OnAnimatorMove()
+        {
+            if (!inputHandler.IsInteracting)
+            {
+                return;
+            }
+            float delta = Time.deltaTime;
+            playerLocomotion.Rigidbody.drag = 0;
+            Vector3 deltaPosition = anim.deltaPosition;
+            deltaPosition.y = 0;
+            Vector3 velocity = deltaPosition / delta;
+            playerLocomotion.Rigidbody.velocity = velocity;
         }
     }
 }

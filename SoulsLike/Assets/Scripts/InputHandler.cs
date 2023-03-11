@@ -14,6 +14,12 @@ namespace OGS
         public float MouseX { get; private set; }
         [field: SerializeField]
         public float MouseY { get; private set; }
+        [field: SerializeField]
+        public bool RollInput { get; private set; }
+        [field: SerializeField]
+        public bool RollFlag { get; set; }
+        [field: SerializeField]
+        public bool IsInteracting { get; set; }
 
         PlayerControls inputActions;
         CameraHandler cameraHandler;
@@ -55,6 +61,7 @@ namespace OGS
         {
             MoveInput(delta);
             CameraInput(delta);
+            HandleRollInput(delta);
         }
 
         private void MoveInput(float delta)
@@ -68,6 +75,18 @@ namespace OGS
         {
             MouseX = cameraInput.x;
             MouseY = cameraInput.y;
+        }
+
+        private void HandleRollInput(float delta)
+        {
+            RollInput = inputActions.PlayerActions.Roll.phase == UnityEngine.InputSystem.InputActionPhase.Performed;
+            //Debug.Log($"inputAction: {inputActions.PlayerActions.Roll.phase}");
+            //Debug.Log($"UnityEngine: {UnityEngine.InputSystem.InputActionPhase.Started}");
+            if (RollInput)
+            {
+                Debug.Log("Pressed roll!");
+                RollFlag = true;
+            }
         }
     }
 }
