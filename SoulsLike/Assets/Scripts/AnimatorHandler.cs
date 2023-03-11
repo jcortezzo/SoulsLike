@@ -99,6 +99,11 @@ namespace OGS
             canRotate = false;
         }
 
+        public void EndInteraction()
+        {
+            anim.SetBool("IsInteracting", false);
+        }
+
         private void OnAnimatorMove()
         {
             if (playerManager.IsInteracting)

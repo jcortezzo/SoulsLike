@@ -14,6 +14,10 @@ namespace OGS
         public bool IsInteracting { get; set; }
         [field: SerializeField]
         public bool IsSprinting { get; set; }
+        [field: SerializeField]
+        public bool IsAirborne { get; set; }
+        [field: SerializeField]
+        public bool IsGrounded { get; set; }
 
         public UnityEvent RollEvent { get; private set; }
 
@@ -42,6 +46,7 @@ namespace OGS
 
             inputHandler.TickInput(delta);
             playerLocomotion?.HandleMovement(delta);
+            playerLocomotion?.HandleFalling(delta);
         }
 
         private void FixedUpdate()
@@ -55,6 +60,11 @@ namespace OGS
         private void LateUpdate()
         {
             IsSprinting = inputHandler.SprintFlag;
+
+            if (IsAirborne)
+            {
+                playerLocomotion.airborneTimer += Time.deltaTime;
+            }
         }
     }
 }
