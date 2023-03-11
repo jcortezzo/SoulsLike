@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace OGS
 {
@@ -14,9 +15,12 @@ namespace OGS
         [field: SerializeField]
         public bool IsSprinting { get; set; }
 
+        public UnityEvent RollEvent { get; private set; }
+
         private void Awake()
         {
             cameraHandler = CameraHandler.Instance;
+            RollEvent = new UnityEvent();
         }
 
         // Start is called before the first frame update
@@ -24,7 +28,9 @@ namespace OGS
         {
             inputHandler = GetComponent<InputHandler>();
             anim = GetComponentInChildren<Animator>();
+
             playerLocomotion = GetComponent<PlayerLocomotion>();
+            RollEvent.AddListener(playerLocomotion.Roll);
         }
 
         // Update is called once per frame
@@ -36,7 +42,6 @@ namespace OGS
 
             inputHandler.TickInput(delta);
             playerLocomotion?.HandleMovement(delta);
-            playerLocomotion?.HandleRollAndSprint(delta);
         }
 
         private void FixedUpdate()
@@ -49,7 +54,6 @@ namespace OGS
 
         private void LateUpdate()
         {
-            inputHandler.RollFlag = false;
             inputHandler.SprintFlag = false;
             IsSprinting = inputHandler.RollInput;
         }

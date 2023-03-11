@@ -27,6 +27,13 @@ namespace OGS
         Vector2 movementInput;
         Vector2 cameraInput;
 
+        PlayerManager playerManager;
+
+        private void Awake()
+        {
+            playerManager = GetComponent<PlayerManager>();
+        }
+
         public void OnEnable()
         {
             if (inputActions == null)
@@ -34,14 +41,23 @@ namespace OGS
                 inputActions = new PlayerControls();
                 inputActions.PlayerMovement.Movement.performed += ctx => movementInput = ctx.ReadValue<Vector2>();
                 inputActions.PlayerMovement.Camera.performed += ctx => cameraInput = ctx.ReadValue<Vector2>();
-                inputActions.PlayerMovement.Sprint.performed += ctx => SprintFlag = true;
-                inputActions.PlayerMovement.Sprint.canceled += ctx => SprintFlag = false;
+                inputActions.PlayerMovement.Sprint.performed += ctx =>
+                {
+                    Debug.Log("Sprint!");
+                    SprintFlag = true;
+                };
+                inputActions.PlayerMovement.Sprint.canceled += ctx =>
+                {
+                    Debug.Log("End Sprint");
+                    SprintFlag = false;
+                };
 
                 inputActions.PlayerActions.Roll.performed += ctx =>
                 {
-                    RollFlag = true;
-                    SprintFlag = false;
+                    Debug.Log("Roll!");
+                    playerManager.RollEvent.Invoke();
                 };
+
             }
 
             inputActions.Enable();
