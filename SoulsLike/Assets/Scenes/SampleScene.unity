@@ -1060,8 +1060,9 @@ MonoBehaviour:
   movementSpeed: 5
   sprintSpeed: 7
   rotationSpeed: 10
-  fallingSpeed: 45
+  fallingSpeed: 80
   maxFallingSpeed: 2000
+  bumpOffLedgeSpeed: 200
 --- !u!114 &1965759518
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1106,11 +1107,11 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1965759515}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 2028b76ecf4180243b092bb14459ede3, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 0.3
-  m_Height: 1.75
+  m_Height: 1.5
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
 --- !u!114 &1965759521

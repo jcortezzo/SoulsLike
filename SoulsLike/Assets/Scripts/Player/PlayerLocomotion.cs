@@ -6,7 +6,7 @@ namespace OGS
     {
         Transform cameraObject;
         InputHandler inputHandler;
-        private Vector3 moveDirection;
+        public Vector3 moveDirection;
 
         [HideInInspector]
         public Transform myTransform;
@@ -24,7 +24,7 @@ namespace OGS
         [SerializeField]
         private float minDistanceNeededToBeginFall = 1f;
         [SerializeField]
-        private float groundDirectionRayDistance = 0.01f;
+        private float groundDirectionRayDistance = 0.2f;
         private LayerMask ignoreForGroundCheck;
         public float airborneTimer;
 
@@ -39,6 +39,8 @@ namespace OGS
         private float fallingSpeed = 45;
         [SerializeField]
         private float maxFallingSpeed = 45;
+        [SerializeField]
+        private float bumpOffLedgeSpeed = 10f;
 
         void Start()
         {
@@ -119,27 +121,19 @@ namespace OGS
             myTransform.rotation = targetRotation;
         }
 
-        public void HandleFalling(float delta)
+        public void HandleFalling(float delta, Vector3 moveDirection)
         {
-            Vector3 moveDirection = this.moveDirection;
-            playerManager.IsGrounded = false;
             RaycastHit hit;
-            Vector3 origin = myTransform.position;
-            origin.y += groundDetectionRayStartPoint;
+            Vector3 origin = myTransform.position + new Vector3(0, groundDetectionRayStartPoint, 0);
 
             if (Physics.Raycast(origin, myTransform.forward, out hit, 0.4f))
             {
                 moveDirection = Vector3.zero;
             }
-            if (playerManager.IsAirborne && Mathf.Abs(Rigidbody.velocity.y) < maxFallingSpeed)
+            if (playerManager.IsAirborne)
             {
-                Rigidbody.AddForce(-Vector3.up * fallingSpeed * delta);
-                Rigidbody.AddForce(moveDirection * fallingSpeed / 100f * delta);
-
-                if (Mathf.Abs(Rigidbody.velocity.y) > maxFallingSpeed)
-                {
-                    Rigidbody.velocity = new Vector3(Rigidbody.velocity.x, maxFallingSpeed, Rigidbody.velocity.z);
-                }
+                Rigidbody.AddForce(Vector3.down * fallingSpeed);
+                Rigidbody.AddForce(moveDirection * fallingSpeed / bumpOffLedgeSpeed);
             }
 
             Vector3 dir = moveDirection;
@@ -148,15 +142,15 @@ namespace OGS
 
             this.targetPosition = myTransform.position;
 
-            Debug.DrawRay(origin, -Vector3.up * minDistanceNeededToBeginFall, Color.red, 0.1f, false);
+            Debug.DrawRay(origin, Vector3.down * minDistanceNeededToBeginFall, Color.green, 0.1f, false);
 
             // Land
-            if (Physics.Raycast(origin, -Vector3.up, out hit, minDistanceNeededToBeginFall, ignoreForGroundCheck))
+            if (Physics.Raycast(origin, Vector3.down, out hit, minDistanceNeededToBeginFall, ignoreForGroundCheck))
             {
                 normalVector = hit.normal;
-                Vector3 targetPosition = hit.point;
+                Vector3 tp = hit.point;
                 playerManager.IsGrounded = true;
-                this.targetPosition.y = targetPosition.y;
+                targetPosition.y = tp.y;
 
                 if (playerManager.IsAirborne)
                 {
@@ -174,11 +168,13 @@ namespace OGS
                     playerManager.IsAirborne = false;
                 }
             }
+            // Airborne
             else
             {
                 playerManager.IsGrounded = false;
                 if (!playerManager.IsAirborne)
                 {
+                    //Rigidbody.AddForce(moveDirection * bumpOffLedgeSpeed);
                     if (!playerManager.IsInteracting)
                     {
                         animatorHandler.PlayTargetAnimation("Fall", true);

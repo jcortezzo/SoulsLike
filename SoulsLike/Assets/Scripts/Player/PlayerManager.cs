@@ -57,7 +57,7 @@ namespace OGS
 
             inputHandler.TickInput(delta);
             playerLocomotion?.HandleMovement(delta);
-            playerLocomotion?.HandleFalling(delta);
+            playerLocomotion?.HandleFalling(delta, playerLocomotion.moveDirection);
         }
 
         private void FixedUpdate()
