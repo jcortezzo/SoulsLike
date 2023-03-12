@@ -7,8 +7,10 @@ namespace OGS
     {
         InputHandler inputHandler;
         Animator anim;
-        CameraHandler cameraHandler;
-        PlayerLocomotion playerLocomotion;
+        private CameraHandler cameraHandler;
+        private PlayerLocomotion playerLocomotion;
+        private PlayerInventory playerInventory;
+        private PlayerAttacker playerAttacker;
 
         [field: SerializeField]
         public bool IsInteracting { get; set; }
@@ -19,12 +21,19 @@ namespace OGS
         [field: SerializeField]
         public bool IsGrounded { get; set; }
 
+        [field: SerializeField]
+        public bool IsActionable { get { return !IsInteracting && !IsAirborne; } }
+
         public UnityEvent RollEvent { get; private set; }
+        public UnityEvent<WeaponItem> RBEvent { get; private set; }
+        public UnityEvent<WeaponItem> RTEvent { get; private set; }
 
         private void Awake()
         {
             cameraHandler = CameraHandler.Instance;
             RollEvent = new UnityEvent();
+            RBEvent = new UnityEvent<WeaponItem>();
+            RTEvent = new UnityEvent<WeaponItem>();
         }
 
         // Start is called before the first frame update
@@ -35,6 +44,11 @@ namespace OGS
 
             playerLocomotion = GetComponent<PlayerLocomotion>();
             RollEvent.AddListener(playerLocomotion.Roll);
+
+            playerInventory = GetComponent<PlayerInventory>();
+            playerAttacker = GetComponent<PlayerAttacker>();
+            RBEvent.AddListener(playerAttacker.HandleLightAttack);
+            RTEvent.AddListener(playerAttacker.HandleHeavyAttack);
         }
 
         // Update is called once per frame
@@ -46,7 +60,7 @@ namespace OGS
 
             inputHandler.TickInput(delta);
             playerLocomotion?.HandleMovement(delta);
-            playerLocomotion?.HandleFalling(delta);
+            playerLocomotion?.HandleFalling(delta, playerLocomotion.moveDirection);
         }
 
         private void FixedUpdate()

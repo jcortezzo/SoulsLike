@@ -214,7 +214,7 @@ Transform:
   m_GameObject: {fileID: 64319934}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.22, y: 1.7, z: 0.19}
-  m_LocalScale: {x: 1, y: 3.2677, z: 1}
+  m_LocalScale: {x: 2.0006, y: 8.373808, z: 2.2912}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -1014,6 +1014,7 @@ GameObject:
   - component: {fileID: 1965759517}
   - component: {fileID: 1965759521}
   - component: {fileID: 1965759522}
+  - component: {fileID: 1965759523}
   m_Layer: 10
   m_Name: Player
   m_TagString: Untagged
@@ -1029,7 +1030,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1965759515}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 3.32, z: 0}
+  m_LocalPosition: {x: 0, y: 6, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1049,18 +1050,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8e5ac7c9e3317145ba1b20928b09619, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  moveDirection: {x: 0, y: 0, z: 0}
   myTransform: {fileID: 0}
   animatorHandler: {fileID: 0}
   normalCamera: {fileID: 0}
-  groundDetectionRayStartPoint: 0.5
+  groundDetectionRayStartPoint: 0.75
   minDistanceNeededToBeginFall: 1
-  groundDirectionRayDistance: 0.2
+  groundDirectionRayDistance: -0.2
   airborneTimer: 0
   movementSpeed: 5
   sprintSpeed: 7
   rotationSpeed: 10
-  fallingSpeed: 45
-  maxFallingSpeed: 100
+  fallingSpeed: 80
+  maxFallingSpeed: 2000
+  bumpOffLedgeSpeed: 1000
 --- !u!114 &1965759518
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1105,7 +1108,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1965759515}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 2028b76ecf4180243b092bb14459ede3, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 0.3
@@ -1144,3 +1147,15 @@ MonoBehaviour:
     type: 2}
   <LeftWeapon>k__BackingField: {fileID: 11400000, guid: 90f187126fbfa134c92e1d19a623ceba,
     type: 2}
+--- !u!114 &1965759523
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1965759515}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 691f8dc7680783e4590e7c62d80aa513, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

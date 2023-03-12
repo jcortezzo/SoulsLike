@@ -27,11 +27,13 @@ namespace OGS
         Vector2 movementInput;
         Vector2 cameraInput;
 
-        PlayerManager playerManager;
+        private PlayerManager playerManager;
+        private PlayerInventory playerInventory;
 
         private void Awake()
         {
             playerManager = GetComponent<PlayerManager>();
+            playerInventory = GetComponent<PlayerInventory>();
         }
 
         public void OnEnable()
@@ -41,20 +43,13 @@ namespace OGS
                 inputActions = new PlayerControls();
                 inputActions.PlayerMovement.Movement.performed += ctx => movementInput = ctx.ReadValue<Vector2>();
                 inputActions.PlayerMovement.Camera.performed += ctx => cameraInput = ctx.ReadValue<Vector2>();
-                inputActions.PlayerMovement.Sprint.performed += ctx =>
-                {
-                    SprintFlag = true;
-                };
-                inputActions.PlayerMovement.Sprint.canceled += ctx =>
-                {
-                    SprintFlag = false;
-                };
+                inputActions.PlayerMovement.Sprint.performed += ctx => SprintFlag = true;
+                inputActions.PlayerMovement.Sprint.canceled += ctx => SprintFlag = false;
 
-                inputActions.PlayerActions.Roll.performed += ctx =>
-                {
-                    playerManager.RollEvent.Invoke();
-                };
+                inputActions.PlayerActions.Roll.performed += ctx => playerManager.RollEvent.Invoke();
 
+                inputActions.PlayerActions.RB.performed += ctx => playerManager.RBEvent.Invoke(playerInventory.RightWeapon);
+                inputActions.PlayerActions.RT.performed += ctx => playerManager.RTEvent.Invoke(playerInventory.RightWeapon);
             }
 
             inputActions.Enable();
