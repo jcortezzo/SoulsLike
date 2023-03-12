@@ -49,8 +49,7 @@ namespace OGS
                 inputActions.PlayerActions.Roll.performed += ctx => playerManager.RollEvent.Invoke();
 
                 inputActions.PlayerActions.RB.performed += ctx => playerManager.RBEvent.Invoke(playerInventory.RightWeapon);
-                inputActions.PlayerActions.RB.performed += ctx => playerManager.RTEvent.Invoke(playerInventory.RightWeapon);
-
+                inputActions.PlayerActions.RT.performed += ctx => playerManager.RTEvent.Invoke(playerInventory.RightWeapon);
             }
 
             inputActions.Enable();

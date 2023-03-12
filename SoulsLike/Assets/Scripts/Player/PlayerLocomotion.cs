@@ -132,7 +132,7 @@ namespace OGS
             }
             if (playerManager.IsAirborne)
             {
-                Rigidbody.AddForce(Vector3.down * fallingSpeed);
+                Rigidbody.AddForce(Vector3.down * fallingSpeed * delta);
                 Rigidbody.AddForce(moveDirection * fallingSpeed / bumpOffLedgeSpeed);
             }
 

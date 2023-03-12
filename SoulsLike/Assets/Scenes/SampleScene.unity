@@ -1061,9 +1061,9 @@ MonoBehaviour:
   movementSpeed: 5
   sprintSpeed: 7
   rotationSpeed: 10
-  fallingSpeed: 100
+  fallingSpeed: 80
   maxFallingSpeed: 2000
-  bumpOffLedgeSpeed: 10
+  bumpOffLedgeSpeed: 1000
 --- !u!114 &1965759518
 MonoBehaviour:
   m_ObjectHideFlags: 0
