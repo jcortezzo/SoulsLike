@@ -21,6 +21,9 @@ namespace OGS
         [field: SerializeField]
         public bool IsGrounded { get; set; }
 
+        [field: SerializeField]
+        public bool IsActionable { get { return !IsInteracting && !IsAirborne; } }
+
         public UnityEvent RollEvent { get; private set; }
         public UnityEvent<WeaponItem> RBEvent { get; private set; }
         public UnityEvent<WeaponItem> RTEvent { get; private set; }

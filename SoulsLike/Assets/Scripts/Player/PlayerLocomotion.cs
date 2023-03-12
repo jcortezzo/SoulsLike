@@ -199,10 +199,11 @@ namespace OGS
                 }
             }
         }
+        #endregion
 
         public void Roll()
         {
-            if (animatorHandler.anim.GetBool("IsInteracting"))
+            if (animatorHandler.anim.GetBool("IsInteracting") || playerManager.IsAirborne)
             {
                 return;
             }
@@ -222,6 +223,5 @@ namespace OGS
                 animatorHandler.PlayTargetAnimation("Backstep", true);
             }
         }
-        #endregion
     }
 }
