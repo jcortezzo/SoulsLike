@@ -1014,6 +1014,7 @@ GameObject:
   - component: {fileID: 1965759517}
   - component: {fileID: 1965759521}
   - component: {fileID: 1965759522}
+  - component: {fileID: 1965759523}
   m_Layer: 10
   m_Name: Player
   m_TagString: Untagged
@@ -1060,7 +1061,7 @@ MonoBehaviour:
   sprintSpeed: 7
   rotationSpeed: 10
   fallingSpeed: 45
-  maxFallingSpeed: 100
+  maxFallingSpeed: 2000
 --- !u!114 &1965759518
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1144,3 +1145,15 @@ MonoBehaviour:
     type: 2}
   <LeftWeapon>k__BackingField: {fileID: 11400000, guid: 90f187126fbfa134c92e1d19a623ceba,
     type: 2}
+--- !u!114 &1965759523
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1965759515}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 691f8dc7680783e4590e7c62d80aa513, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

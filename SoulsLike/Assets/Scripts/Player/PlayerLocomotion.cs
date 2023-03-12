@@ -24,7 +24,7 @@ namespace OGS
         [SerializeField]
         private float minDistanceNeededToBeginFall = 1f;
         [SerializeField]
-        private float groundDirectionRayDistance = 0.2f;
+        private float groundDirectionRayDistance = 0.01f;
         private LayerMask ignoreForGroundCheck;
         public float airborneTimer;
 
@@ -81,10 +81,14 @@ namespace OGS
 
             float speed = movementSpeed;
 
-            if (inputHandler.SprintFlag)
+            if (inputHandler.SprintFlag && inputHandler.MoveAmount > 0.5)
             {
                 speed = sprintSpeed;
                 playerManager.IsSprinting = true;
+            }
+            else
+            {
+                playerManager.IsSprinting = false;
             }
             moveDirection *= speed;
 
@@ -130,7 +134,7 @@ namespace OGS
             if (playerManager.IsAirborne && Mathf.Abs(Rigidbody.velocity.y) < maxFallingSpeed)
             {
                 Rigidbody.AddForce(-Vector3.up * fallingSpeed * delta);
-                Rigidbody.AddForce(moveDirection * fallingSpeed / 40f * delta);
+                Rigidbody.AddForce(moveDirection * fallingSpeed / 100f * delta);
 
                 if (Mathf.Abs(Rigidbody.velocity.y) > maxFallingSpeed)
                 {
