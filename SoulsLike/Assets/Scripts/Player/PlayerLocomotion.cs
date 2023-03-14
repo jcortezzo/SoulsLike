@@ -161,7 +161,7 @@ namespace OGS
                     }
                     else
                     {
-                        animatorHandler.PlayTargetAnimation("Locomotion", false);
+                        animatorHandler.PlayTargetAnimation("Empty", false);
                     }
                     airborneTimer = 0;
 
@@ -187,16 +187,13 @@ namespace OGS
                 }
             }
 
-            if (playerManager.IsGrounded)
+            if (playerManager.IsInteracting || inputHandler.MoveAmount > 0)
             {
-                if (playerManager.IsInteracting || inputHandler.MoveAmount > 0)
-                {
-                    myTransform.position = Vector3.Lerp(myTransform.position, targetPosition, Time.deltaTime);
-                }
-                else
-                {
-                    myTransform.position = targetPosition;
-                }
+                myTransform.position = Vector3.Lerp(myTransform.position, targetPosition, Time.deltaTime / 0.1f);
+            }
+            else
+            {
+                myTransform.position = targetPosition;
             }
         }
         #endregion

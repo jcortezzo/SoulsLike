@@ -30,7 +30,7 @@ namespace OGS
 
         private void Awake()
         {
-            cameraHandler = CameraHandler.Instance;
+            cameraHandler = FindObjectOfType<CameraHandler>();
             RollEvent = new UnityEvent();
             RBEvent = new UnityEvent<WeaponItem>();
             RTEvent = new UnityEvent<WeaponItem>();
