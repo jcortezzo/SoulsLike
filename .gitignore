@@ -64,3 +64,5 @@ crashlytics-build.properties
 # Custom
 /SoulsLike/.vsconfig
 /SoulsLike/UserSettings/
+/SoulsLike/[Aa]ssets/PolygonDungeon/
+/SoulsLike/[Aa]ssets/PolygonDungeon.meta

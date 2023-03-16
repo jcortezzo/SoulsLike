@@ -210,7 +210,7 @@ namespace OGS
 
             if (inputHandler.MoveAmount > 0)
             {
-                animatorHandler.PlayTargetAnimation("Roll", true);
+                animatorHandler.PlayTargetAnimation("NewRollInPlace", true);
                 moveDirection.y = 0;
                 Quaternion rollRotation = Quaternion.LookRotation(moveDirection);
                 myTransform.rotation = rollRotation;
